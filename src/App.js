@@ -1,28 +1,52 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
 import './App.css';
+import MessageList from "./messages/MessageList";
+import {Message} from './messages/classes/Message';
+import AddMessageForm from "./messages/AddMessageForm";
+import MessageRepository from "./firebase/MessageRepository";
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            messages: []
+        };
+
+        this.db = this.props.db;
+        this.messageRepo = new MessageRepository(this.db);
+        this.messageRepo.onMessagesChanged = this.messagesChanged;
+    }
+
+    deleteMessage = (id) => {
+        this.messageRepo.deleteMessage(id);
+    };
+
+    addMessage = (message) => {
+        this.messageRepo.addMessage(message);
+    };
+
+    messagesChanged = (snapshotData) => {
+        this.setState({messages: []});
+        const newMessages = [];
+        for (let messageId in snapshotData) {
+            const id = messageId;
+            const messageText = snapshotData[messageId].message;
+            newMessages.push(new Message(id, messageText));
+        }
+        this.setState({messages: newMessages});
+    };
+
+    render() {
+        return (
+            <div className="App">
+                <h2>Message form</h2>
+                <AddMessageForm addMessage={this.addMessage}/>
+                <h2>recoreded messages</h2>
+                <MessageList messages={this.state.messages} deleteMessage={this.deleteMessage}/>
+            </div>
+        );
+    }
 }
 
 export default App;
