@@ -11,9 +11,11 @@ export default class MessageListItem extends Component{
     };
 
     render() {
-        return (<li>
-            {this.message.text}
-            <a href="#" onClick={this.deleteMessage}>Delete</a>
-        </li>);
+        return (
+            <li>
+                {this.message.text}
+                <a href="#" onClick={this.deleteMessage}>Delete</a>
+            </li>
+        );
     }
 }

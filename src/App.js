@@ -4,6 +4,7 @@ import MessageList from "./messages/MessageList";
 import {Message} from './messages/classes/Message';
 import AddMessageForm from "./messages/AddMessageForm";
 import MessageRepository from "./firebase/MessageRepository";
+import Counter from './counter/Counter';
 
 class App extends Component {
     constructor(props) {
@@ -40,10 +41,13 @@ class App extends Component {
     render() {
         return (
             <div className="App">
+                <h1>Messages</h1>
                 <h2>Message form</h2>
                 <AddMessageForm addMessage={this.addMessage}/>
                 <h2>recoreded messages</h2>
                 <MessageList messages={this.state.messages} deleteMessage={this.deleteMessage}/>
+                <h1>Counter</h1>
+                <Counter/>
             </div>
         );
     }
